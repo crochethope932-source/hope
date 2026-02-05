@@ -1,3 +1,22 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "logo",
+      "description": "Hope 'Sphere Crochet logo",
+      "imageUrl": "https://images.unsplash.com/photo-1625138644438-47f3b3c66880?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bG9nbyUyMGJyYW5kfGVufDB8fHx8MTc3MDI1NjA2OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "logo brand"
+    },
+    {
+      "id": "hero",
+      "description": "Artisanal crochet products on display",
+      "imageUrl": "https://images.unsplash.com/photo-1705274286996-6cc663871d9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y3JvY2hldCUyMHRleHR1cmV8ZW58MHx8fHwxNzcwMzA3MjYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "crochet texture"
+    },
+    {
+      "id": "about",
+      "description": "Founder of Hope 'Sphere Crochet smiling",
+      "imageUrl": "https://images.unsplash.com/photo-1719154717814-2a42aabf08c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhcnRpc2FuJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzcwMzA3MjYyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "artisan portrait"
+    }
+  ]
 }
