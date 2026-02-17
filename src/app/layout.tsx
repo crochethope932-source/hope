@@ -7,7 +7,18 @@ export const metadata: Metadata = {
   description:
     'Dans chaque maille une touche d’espoir. Mode, Art du fait main & Formation.',
   icons: {
-    icon: 'https://i.imgur.com/xAIcGXa.jpeg',
+    icon: {
+      url: 'https://i.imgur.com/xAIcGXa.jpeg',
+      type: 'image/jpeg',
+    },
+    shortcut: {
+      url: 'https://i.imgur.com/xAIcGXa.jpeg',
+      type: 'image/jpeg',
+    },
+    apple: {
+      url: 'https://i.imgur.com/xAIcGXa.jpeg',
+      type: 'image/jpeg',
+    },
   },
 };
 
