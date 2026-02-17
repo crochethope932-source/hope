@@ -7,8 +7,8 @@ export default function About() {
   return (
     <section id="about" className="py-16 md:py-24 bg-secondary/30">
       <div className="container max-w-7xl mx-auto px-4">
-        <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-center">
-          <div className="md:col-span-2">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div>
             {aboutImage && (
               <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105">
                 <Image
@@ -16,13 +16,13 @@ export default function About() {
                   alt={aboutImage.description}
                   fill
                   className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 40vw"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   data-ai-hint={aboutImage.imageHint}
                 />
               </div>
             )}
           </div>
-          <div className="md:col-span-3">
+          <div>
             <h2 className="font-headline text-3xl md:text-4xl font-bold text-foreground/90 mb-6">
               À Propos de Hope 'Sphere Crochet
             </h2>
