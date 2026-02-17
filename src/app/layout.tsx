@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: "Hope 'Sphere Crochet",
   description:
     'Dans chaque maille une touche d’espoir. Mode, Art du fait main & Formation.',
+  icons: {
+    icon: 'https://i.imgur.com/xAIcGXa.jpeg',
+  },
 };
 
 export default function RootLayout({
