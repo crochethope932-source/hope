@@ -2,13 +2,13 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  projectId: 'studio-2251273207-7120c',
-  appId: '1:801862829472:web:bdc29554d2192acec890c5',
-  databaseURL: 'https://studio-2251273207-7120c-default-rtdb.firebaseio.com',
-  storageBucket: 'studio-2251273207-7120c.firebasestorage.app',
-  apiKey: 'AIzaSyBy1Cc8LQM3uuXq81GcBBBMjhR9DzS1c10',
-  authDomain: 'studio-2251273207-7120c.firebaseapp.com',
-  messagingSenderId: '801862829472',
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
 };
 
 // Avoid duplicate initialization in Next.js hot-reload / SSR
