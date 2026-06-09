@@ -1,4 +1,6 @@
 'use client';
+
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -20,8 +22,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '@/components/ui/card';
+import { submitContactForm } from '@/lib/firestore';
+import { MessageSquare, Mail, Sparkles } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères.'),
@@ -35,6 +40,8 @@ const formSchema = z.object({
 
 export default function ContactForm() {
   const { toast } = useToast();
+  const [contactViaWhatsApp, setContactViaWhatsApp] = useState(true);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,19 +53,50 @@ export default function ContactForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // In a real application, you would call a server action here.
-    // e.g., const result = await submitContactForm(values);
-    console.log(values);
+    try {
+      // 1. Toujours enregistrer dans Firestore (sauvegarde e-mail / base de données)
+      await submitContactForm(values);
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      // 2. Si l'option WhatsApp est cochée, rediriger l'utilisateur vers WhatsApp
+      if (contactViaWhatsApp) {
+        const trainingLabel = {
+          module_a: 'Formation en présentiel - Module A (45 000 F CFA)',
+          module_b: 'Formation en présentiel - Module B (75 000 F CFA)',
+          online: 'Formation en ligne',
+          other: 'Autre demande / Autre sujet',
+        }[values.training];
 
-    toast({
-      title: 'Message envoyé !',
-      description:
-        'Merci de nous avoir contactés. Nous vous répondrons bientôt.',
-    });
-    form.reset();
+        // Construction du message WhatsApp avec mise en forme
+        const text = `Bonjour HopeSphere Crochet ! 🧶\n\nJe m'appelle *${values.name}*.\nJe souhaite m'inscrire / me renseigner pour :\n- *Formation* : ${trainingLabel}\n- *Email* : ${values.email}\n\n*Mon message* :\n${values.message}`;
+        const encodedText = encodeURIComponent(text);
+        
+        // Numéro officiel HSC au Bénin
+        const whatsappUrl = `https://wa.me/2290161746169?text=${encodedText}`;
+
+        // Ouvrir dans un nouvel onglet
+        window.open(whatsappUrl, '_blank');
+
+        toast({
+          title: '✅ Inscription enregistrée !',
+          description: 'Redirection vers WhatsApp en cours pour finaliser votre demande...',
+        });
+      } else {
+        // Soumission classique e-mail
+        toast({
+          title: '✅ Message envoyé !',
+          description: 'Merci de nous avoir contactés. Nous vous répondrons par e-mail bientôt.',
+        });
+      }
+      
+      form.reset();
+    } catch (error) {
+      console.error('Erreur lors de la soumission du formulaire :', error);
+      toast({
+        variant: 'destructive',
+        title: '❌ Erreur',
+        description: "Une erreur est survenue lors de l'envoi. Veuillez réessayer.",
+      });
+    }
   }
 
   return (
@@ -73,7 +111,7 @@ export default function ContactForm() {
             formulaire ci-dessous.
           </p>
         </div>
-        <Card>
+        <Card className="border-primary/10 shadow-lg">
           <CardContent className="p-6 md:p-8">
             <Form {...form}>
               <form
@@ -161,14 +199,49 @@ export default function ContactForm() {
                     </FormItem>
                   )}
                 />
+
+                {/* WhatsApp Prioritization Checkbox */}
+                <div className="flex items-center space-x-3 bg-[#e8f5e9]/40 border border-[#c8e6c9] p-4 rounded-xl transition-all duration-300">
+                  <Checkbox
+                    id="whatsapp-contact"
+                    checked={contactViaWhatsApp}
+                    onCheckedChange={(checked) => setContactViaWhatsApp(!!checked)}
+                    className="border-[#4caf50] data-[state=checked]:bg-[#4caf50] data-[state=checked]:border-[#4caf50]"
+                  />
+                  <label
+                    htmlFor="whatsapp-contact"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer text-[#1b5e20] flex flex-wrap items-center gap-1.5"
+                  >
+                    <span>Contacter aussi par WhatsApp pour une réponse plus rapide</span>
+                    <span className="text-[10px] bg-[#4caf50] text-white font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                      <Sparkles className="h-2.5 w-2.5" /> Recommandé
+                    </span>
+                  </label>
+                </div>
+
+                {/* Dynamic Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full"
                   disabled={form.formState.isSubmitting}
+                  className={`w-full py-6 font-bold text-base rounded-full shadow-md transition-all duration-300 flex items-center justify-center gap-2 ${
+                    contactViaWhatsApp
+                      ? 'bg-[#25D366] hover:bg-[#128C7E] text-white hover:shadow-lg active:scale-[0.98]'
+                      : 'bg-[#FFB347] hover:bg-[#FFB347]/80 text-amber-950 hover:shadow active:scale-[0.98]'
+                  }`}
                 >
-                  {form.formState.isSubmitting
-                    ? 'Envoi en cours...'
-                    : 'Envoyer le message'}
+                  {form.formState.isSubmitting ? (
+                    'Envoi en cours...'
+                  ) : contactViaWhatsApp ? (
+                    <>
+                      <MessageSquare className="h-5 w-5" />
+                      Envoyer et discuter sur WhatsApp 💬
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="h-5 w-5" />
+                      Envoyer par E-mail
+                    </>
+                  )}
                 </Button>
               </form>
             </Form>

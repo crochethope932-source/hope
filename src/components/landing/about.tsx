@@ -10,12 +10,12 @@ export default function About() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div>
             {aboutImage && (
-              <div className="relative aspect-[3/4] rounded-lg overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105">
+              <div className="relative aspect-[4/3] sm:aspect-[3/4] rounded-lg overflow-hidden shadow-lg transform transition-transform duration-500 hover:scale-105">
                 <Image
                   src={aboutImage.imageUrl}
                   alt={aboutImage.description}
                   fill
-                  className="object-cover"
+                  className="object-cover object-top sm:object-center"
                   sizes="(max-width: 768px) 100vw, 50vw"
                   data-ai-hint={aboutImage.imageHint}
                 />

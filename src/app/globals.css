@@ -78,7 +78,41 @@
   * {
     @apply border-border;
   }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
   body {
     @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent horizontal overflow on mobile */
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  /* Improve touch targets on mobile */
+  button, a, [role="button"] {
+    touch-action: manipulation;
+  }
+  /* Prevent text overflow on mobile */
+  p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  /* Safe area inset for devices with notch */
+  .container {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Mobile-specific utility classes */
+@layer utilities {
+  .mobile-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .text-balance {
+    text-wrap: balance;
   }
 }

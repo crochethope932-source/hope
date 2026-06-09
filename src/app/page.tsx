@@ -1,10 +1,12 @@
 import Header from '@/components/landing/header';
 import Hero from '@/components/landing/hero';
 import About from '@/components/landing/about';
+import Gallery from '@/components/landing/gallery';
 import OnSiteTraining from '@/components/landing/on-site-training';
 import OnlineTraining from '@/components/landing/online-training';
 import ContactForm from '@/components/landing/contact-form';
 import Footer from '@/components/landing/footer';
+import FAQ from '@/components/landing/faq';
 
 export default function Home() {
   return (
@@ -13,8 +15,10 @@ export default function Home() {
       <main className="flex-grow">
         <Hero />
         <About />
+        <Gallery />
         <OnSiteTraining />
         <OnlineTraining />
+        <FAQ />
         <ContactForm />
       </main>
       <Footer />

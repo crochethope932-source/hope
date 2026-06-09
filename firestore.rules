@@ -1,0 +1,100 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: contacts
+// Document ID: auto-generated
+// Fields:
+//   - name:      string (required, 2–100 chars)    - full name of sender
+//   - email:     string (required, valid email)    - sender's email address
+//   - training:  string (required, enum)           - one of: module_a, module_b, online, other
+//   - message:   string (required, 10–500 chars)   - message body
+//   - createdAt: timestamp (required, server-set)  - submission timestamp (immutable)
+//
+// Access pattern:
+//   - Anyone (unauthenticated) can CREATE a contact document (public contact form)
+//   - No one can READ, UPDATE, or DELETE contact documents from the client
+//   - Admin access to read/manage contacts must be done server-side (Admin SDK)
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------
+    // Helper Functions
+    // ---------------------------------------------------------------
+
+    // Validate email format
+    function isValidEmail(email) {
+      return email is string &&
+        email.matches('^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$');
+    }
+
+    // Validate string length
+    function validStringLength(value, minLen, maxLen) {
+      return value is string &&
+        value.size() >= minLen &&
+        value.size() <= maxLen;
+    }
+
+    // Validate the training enum
+    function isValidTraining(value) {
+      return value is string &&
+        value in ['module_a', 'module_b', 'online', 'other'];
+    }
+
+    // Validate that only the allowed fields are present (strict schema)
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Validate that all required fields are present
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ---------------------------------------------------------------
+    // Domain Validator for a contact submission
+    // ---------------------------------------------------------------
+    function isValidContact() {
+      let data = request.resource.data;
+      return
+        // Strict schema — no extra fields allowed
+        hasOnlyAllowedFields(['name', 'email', 'training', 'message', 'createdAt']) &&
+        hasRequiredFields(['name', 'email', 'training', 'message', 'createdAt']) &&
+        // name: 2–100 chars
+        validStringLength(data.name, 2, 100) &&
+        // email: valid format, max 254 chars (RFC 5321)
+        isValidEmail(data.email) &&
+        validStringLength(data.email, 5, 254) &&
+        // training: one of the allowed values
+        isValidTraining(data.training) &&
+        // message: 10–500 chars
+        validStringLength(data.message, 10, 500) &&
+        // createdAt must be a recent server timestamp (within 5 minutes)
+        data.createdAt is timestamp &&
+        data.createdAt >= request.time - duration.value(5, 'm') &&
+        data.createdAt <= request.time;
+    }
+
+    // ---------------------------------------------------------------
+    // contacts collection
+    //   CREATE  — public (unauthenticated), validated
+    //   READ    — denied (admin-only via server SDK)
+    //   UPDATE  — denied
+    //   DELETE  — denied
+    // ---------------------------------------------------------------
+    match /contacts/{contactId} {
+      allow create: if isValidContact();
+      allow read, update, delete: if false;
+    }
+
+    // Deny all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

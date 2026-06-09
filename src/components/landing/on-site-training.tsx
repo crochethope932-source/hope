@@ -43,7 +43,7 @@ export default function OnSiteTraining() {
             Rejoignez nos ateliers pour apprendre le crochet dans une ambiance
             conviviale et créative.
           </p>
-          <div className="mt-6 bg-accent/50 border border-primary/20 rounded-lg p-4 inline-block">
+          <div className="mt-6 bg-accent/50 border border-primary/20 rounded-lg p-4 inline-block w-full sm:w-auto">
             <p className="font-semibold">Frais d'inscription : 5000F</p>
             <p className="text-sm text-muted-foreground">
               Donne droit à une attestation et un kit débutant.
@@ -68,8 +68,8 @@ export default function OnSiteTraining() {
         </div>
 
         <div className="text-center mt-8">
-          <p className="font-bold text-primary">
-            Début des cours : APD 07 FEV
+          <p className="font-semibold text-primary text-base">
+            Sessions régulières toute l'année — Contactez-nous pour connaître la date de la prochaine rentrée !
           </p>
         </div>
       </div>
@@ -98,28 +98,28 @@ function TrainingCard({
         isPopular ? 'border-primary shadow-lg' : ''
       }`}
     >
-      <CardHeader className="items-center text-center">
+      <CardHeader className="items-center text-center pb-3 md:pb-6">
         {isPopular && (
           <Badge className="mb-2 bg-primary text-primary-foreground">
-            Place très limitée
+            Le Plus Complet
           </Badge>
         )}
-        <CardTitle className="font-headline text-2xl">{title}</CardTitle>
+        <CardTitle className="font-headline text-xl md:text-2xl">{title}</CardTitle>
         <CardDescription>{duration}</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow">
-        <p className="font-semibold mb-4 text-center">Programme :</p>
-        <ul className="space-y-2">
+      <CardContent className="flex-grow px-4 md:px-6">
+        <p className="font-semibold mb-3 md:mb-4 text-center">Programme :</p>
+        <ul className="space-y-1.5 md:space-y-2">
           {program.map((item, index) => (
             <li key={index} className="flex items-start">
-              <Check className="h-5 w-5 text-green-500 mr-2 shrink-0 mt-0.5" />
-              <span>{item}</span>
+              <Check className="h-4 w-4 md:h-5 md:w-5 text-green-500 mr-2 shrink-0 mt-0.5" />
+              <span className="text-sm md:text-base">{item}</span>
             </li>
           ))}
         </ul>
       </CardContent>
-      <CardFooter className="flex-col items-center mt-4">
-        <p className="text-3xl font-bold mb-4">{price}</p>
+      <CardFooter className="flex-col items-center mt-2 md:mt-4 pb-4 md:pb-6">
+        <p className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">{price}</p>
         <Button asChild className="w-full">
           <Link href="#contact">S'inscrire</Link>
         </Button>
